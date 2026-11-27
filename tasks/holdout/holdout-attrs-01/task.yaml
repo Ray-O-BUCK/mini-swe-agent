@@ -1,0 +1,21 @@
+id: holdout-attrs-01
+repo: .cache/repos/attrs
+base_commit: 6851ab593cd25f3c14393e9355d57d22bec2a074
+fix_commit: 97f8d175656bc03c373a1c9038048a4d312c307c
+problem_statement: |
+  ClassVar detection should also recognize a typing.ForwardRef wrapping a
+  ClassVar annotation, not only strings and quoted annotations. Currently such
+  a forward reference is treated as a regular attribute. Fix the detection
+  while keeping all existing ClassVar forms working.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_annotations.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - "tests/test_annotations.py::test_is_class_var[annot4]"
+pass_to_pass:
+  - tests/test_annotations.py::TestAnnotations::test_keyword_only_auto_attribs
+  - tests/test_annotations.py::TestAnnotations::test_typing_extensions_classvar
+hidden:
+  test_patch: hidden/test_patch.diff

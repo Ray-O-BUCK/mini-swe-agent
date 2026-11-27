@@ -1,0 +1,22 @@
+id: attrs-001
+repo: .cache/repos/attrs
+base_commit: af9c510912ce604a94896cc35c27368d5baf6ae6
+fix_commit: a572c3a4c558a8b9b48cf989fcd956ab1a279439
+problem_statement: |
+  Declaring an attribute with the no-op setattr hook on a frozen class is
+  currently rejected, even though the no-op hook is indistinguishable from
+  declaring no hook at all. A frozen class should accept this attribute
+  definition, while any other setattr hook on a frozen class must still be
+  rejected with the existing error message.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_setattr.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - tests/test_setattr.py::TestSetAttr::test_frozen_on_setattr_nops[nop1]
+pass_to_pass:
+  - tests/test_setattr.py::TestSetAttr::test_frozen_on_setattr_attribute_is_caught
+  - tests/test_setattr.py::TestSetAttr::test_frozen_on_setattr_class_is_caught
+hidden:
+  test_patch: hidden/test_patch.diff

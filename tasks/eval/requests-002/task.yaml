@@ -1,0 +1,23 @@
+id: requests-002
+repo: .cache/repos/requests
+base_commit: bc7dd0fc4d56e808bcdd85ac2d797b3107c89259
+fix_commit: f0198e6dfc431a2293dc16e1b1e8fcddc910a7f3
+problem_statement: |
+  Malformed Content-Type parameters without an equals sign are currently stored
+  as a parameter with the value True, and a charset without a value can leak a
+  malformed value into encoding detection. Ignore malformed parameters and keep
+  valid parsing unchanged.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_utils.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - "tests/test_utils.py::test_get_encoding_from_headers[value3-ISO-8859-1]"
+pass_to_pass:
+  - tests/test_utils.py::test_parse_dict_header
+  - tests/test_utils.py::test_parse_header_links
+  - tests/test_utils.py::test_get_auth_from_url
+  - tests/test_utils.py::test_urldefragauth
+hidden:
+  test_patch: hidden/test_patch.diff

@@ -1,0 +1,23 @@
+id: attrs-002
+repo: .cache/repos/attrs
+base_commit: eccd966d80aff5196efc959316961cfa780439f9
+fix_commit: ce89f5d11feb0805da9ed10bb165238cc959f1bb
+problem_statement: |
+  Raising a frozen-instance error should carry the message "can't set
+  attribute" in the exception itself, the same way normal Python exceptions
+  carry their message. Currently the message is stored only on the class, so
+  the raised exception's string form does not contain it. Fix the error type
+  to pass its message through the standard exception constructor while keeping
+  the same attribute names and message text.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_functional.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - tests/test_functional.py::TestFunctional::test_frozen_instance
+pass_to_pass:
+  - tests/test_functional.py::TestFunctional::test_renaming
+  - tests/test_functional.py::TestFunctional::test_validator
+hidden:
+  test_patch: hidden/test_patch.diff

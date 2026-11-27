@@ -1,0 +1,29 @@
+id: click-001
+repo: .cache/repos/click
+base_commit: 420c8fb44eeadb537cae69d2fee3796e808558dd
+fix_commit: f58ca3e81424a35626c8a475eb59ab95589008ce
+problem_statement: |
+  Sentinel members such as UNSET are singleton marker values. Copying,
+  deep-copying, or pickling a sentinel should return the same member, and
+  copying a Parameter should preserve its UNSET default. Currently these
+  operations fail or produce a different value. Fix the behavior while
+  keeping existing identity and equality semantics.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_utils/test_sentinel.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - tests/test_utils/test_sentinel.py::test_sentinel_duplication_preserves_identity[pickle-Sentinel.UNSET]
+  - tests/test_utils/test_sentinel.py::test_sentinel_duplication_preserves_identity[pickle-Sentinel.FLAG_NEEDS_VALUE]
+  - tests/test_utils/test_sentinel.py::test_parameter_duplication[pickle]
+pass_to_pass:
+  - tests/test_utils/test_sentinel.py::test_unset_sentinel
+  - tests/test_utils/test_sentinel.py::test_sentinel_duplication_preserves_identity[copy-Sentinel.UNSET]
+  - tests/test_utils/test_sentinel.py::test_sentinel_duplication_preserves_identity[copy-Sentinel.FLAG_NEEDS_VALUE]
+  - tests/test_utils/test_sentinel.py::test_sentinel_duplication_preserves_identity[deepcopy-Sentinel.UNSET]
+  - tests/test_utils/test_sentinel.py::test_sentinel_duplication_preserves_identity[deepcopy-Sentinel.FLAG_NEEDS_VALUE]
+  - tests/test_utils/test_sentinel.py::test_parameter_duplication[copy]
+  - tests/test_utils/test_sentinel.py::test_parameter_duplication[deepcopy]
+hidden:
+  test_patch: hidden/test_patch.diff

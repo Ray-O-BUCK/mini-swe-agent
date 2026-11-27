@@ -1,0 +1,23 @@
+id: holdout-packaging-01
+repo: .cache/repos/packaging
+base_commit: 5fc2cf50f2dad5e6fef06be4927ee4cc1e94e313
+fix_commit: 71de7cb379c8b08efb46f099a3b0447ef914a348
+problem_statement: |
+  A pylock lock-version that is a prerelease of an unsupported major version,
+  such as 2.0.dev0, 2.0a1, or 2.0rc1, is currently accepted. Prereleases of
+  the next major version should be rejected the same way as the final
+  version, while versions 1.x and 0.9 must keep their current behavior.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_pylock.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - "tests/test_pylock.py::test_pylock_unsupported_version[2.0.dev0]"
+  - "tests/test_pylock.py::test_pylock_unsupported_version[2.0a1]"
+  - "tests/test_pylock.py::test_pylock_unsupported_version[2.0rc1]"
+pass_to_pass:
+  - tests/test_pylock.py::test_pylock_version
+  - tests/test_pylock.py::test_pylock_invalid_version
+hidden:
+  test_patch: hidden/test_patch.diff

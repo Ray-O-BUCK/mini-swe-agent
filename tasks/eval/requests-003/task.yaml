@@ -1,0 +1,22 @@
+id: requests-003
+repo: .cache/repos/requests
+base_commit: cbce031327be4f1b4b5fd041ff4dcaa8efa2ce53
+fix_commit: ef439eb779c1eba7cbdeeeb302b11e1e061b4b7d
+problem_statement: |
+  After following multiple redirects, each entry in the response history should
+  reference only the earlier redirects. Currently a response can appear in its
+  own history. Fix the redirect history construction without changing normal
+  redirect behavior.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_requests.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - tests/test_requests.py::TestRequests::test_redirect_history_no_self_reference
+pass_to_pass:
+  - tests/test_requests.py::TestRequests::test_HTTP_302_ALLOW_REDIRECT_GET
+  - tests/test_requests.py::TestRequests::test_HTTP_307_ALLOW_REDIRECT_POST
+  - tests/test_requests.py::TestRequests::test_requests_in_history_are_not_overridden
+hidden:
+  test_patch: hidden/test_patch.diff

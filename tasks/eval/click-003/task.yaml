@@ -1,0 +1,22 @@
+id: click-003
+repo: .cache/repos/click
+base_commit: 5e7cf6b6db197de4259e91b299bd4313beb481b4
+fix_commit: c4dd0cd968f61d0ee7a163af810bd695ed893ec3
+problem_statement: |
+  A deprecated command's help text is application data and should not be passed
+  through gettext; only the deprecated label should be localized. Currently a
+  custom translation function can alter the help text for both long and short
+  help, even when the command is not deprecated. Fix the help formatting while
+  keeping the deprecated label translated.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_commands.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - tests/test_commands.py::test_deprecated_help_text_is_not_translated
+pass_to_pass:
+  - tests/test_commands.py::test_deprecated_empty_help_no_leading_space
+  - tests/test_commands.py::test_deprecated_in_invocation
+hidden:
+  test_patch: hidden/test_patch.diff

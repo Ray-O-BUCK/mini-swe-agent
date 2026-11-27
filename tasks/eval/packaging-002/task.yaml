@@ -1,0 +1,26 @@
+id: packaging-002
+repo: .cache/repos/packaging
+base_commit: 8e21512a575ff7cab33e15f77d5f67f278271f07
+fix_commit: 8efde605cc2666f4ab75e028b578b395ba288401
+problem_statement: |
+  A dependency group that includes itself should always be reported as a
+  self-inclusion error, no matter how the include name is spelled. Currently
+  a self-include written with a different spelling, such as different case
+  or dots versus underscores, is reported as a cycle between two different
+  groups. Normalize the include name before building the error so the
+  diagnostic matches the cycle actually detected.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_dependency_groups.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - "tests/test_dependency_groups.py::test_cyclic_include_self_with_unnormalized_spelling[group1-Group1-group1]"
+  - "tests/test_dependency_groups.py::test_cyclic_include_self_with_unnormalized_spelling[group1-GROUP1-group1]"
+  - "tests/test_dependency_groups.py::test_cyclic_include_self_with_unnormalized_spelling[a.b-A_B-a-b]"
+  - "tests/test_dependency_groups.py::test_cyclic_include_self_with_unnormalized_spelling[a_b-A.B-a-b]"
+pass_to_pass:
+  - tests/test_dependency_groups.py::test_cyclic_include_self
+  - tests/test_dependency_groups.py::test_cyclic_include
+hidden:
+  test_patch: hidden/test_patch.diff

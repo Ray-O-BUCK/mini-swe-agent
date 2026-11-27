@@ -1,0 +1,9 @@
+diff --git a/test_add_hidden.py b/test_add_hidden.py
+new file mode 100644
+--- /dev/null
++++ b/test_add_hidden.py
+@@ -0,0 +1,4 @@
++from calc import add
++
++def test_add_positive():
++    assert add(2, 3) == 5

@@ -1,0 +1,18 @@
+id: toy-001
+repo: examples/toy-bench
+base_commit: b1664b6859a8ace37c6045c3bc8ab11794eea837
+fix_commit: 3c0430226968a8194416293a901228d7afa75589
+problem_statement: |
+  The visible test suite passes, but add(2, 3) returns -1;
+  it should return 5. Find and fix the bug. Do not modify the tests.
+test_command: python -m pytest -q
+test_files:
+  - test_calc.py
+  - pytest.ini
+  - test_add_hidden.py
+fail_to_pass:
+  - test_add_hidden.py::test_add_positive
+pass_to_pass:
+  - test_calc.py::test_zero
+hidden:
+  test_patch: hidden/test_patch.diff

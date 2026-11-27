@@ -1,0 +1,30 @@
+# 密钥
+.env
+
+# 虚拟环境
+.venv/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# IDE
+.idea/
+.vscode/
+.claude/
+
+# 运行产物
+runs/
+.cache/
+# 由 scripts/setup_toy_bench.py 生成
+examples/toy-bench/
+
+# 个人学习材料，本地保留，不入库
+knowledge points/
+docs/agent面试复习提纲.md
+*.egg-info/
+build/
+dist/

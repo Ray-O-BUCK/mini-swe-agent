@@ -1,0 +1,25 @@
+id: packaging-001
+repo: .cache/repos/packaging
+base_commit: a00861f4cb12f5705a95e277862cdcd7387abfde
+fix_commit: 5a7d3386d2777180a381eb947f21293124ce8df5
+problem_statement: |
+  A requirement whose arbitrary-version specifier is followed by a spaced
+  specifier, such as "===arbitrarystring,>= 1", is currently parsed
+  incorrectly: the === token absorbs the comma and the following operator.
+  Such specifiers should parse with the same result as their unspaced forms,
+  including when whitespace or parentheses or a trailing marker are present.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_requirements.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - "tests/test_requirements.py::TestRequirementParsing::test_nonempty_arbitrary_version[===arbitrarystring,>= 1]"
+  - "tests/test_requirements.py::TestRequirementParsing::test_nonempty_arbitrary_version[===arbitrarystring, >=1]"
+  - "tests/test_requirements.py::TestRequirementParsing::test_nonempty_arbitrary_version[ (===arbitrarystring,>= 1)]"
+  - "tests/test_requirements.py::TestRequirementParsing::test_nonempty_arbitrary_version[===arbitrarystring,>= 1 ; python_version >= '3']"
+pass_to_pass:
+  - tests/test_requirements.py::test_requirement_specifier_construction
+  - tests/test_requirements.py::test_requirement_specifiers_are_independent
+hidden:
+  test_patch: hidden/test_patch.diff

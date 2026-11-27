@@ -1,0 +1,22 @@
+id: holdout-requests-01
+repo: .cache/repos/requests
+base_commit: 3816cfa1abd42dca21b9e837f26c59b246016aaf
+fix_commit: a4f9a5999bdb9bf2d6e7c8aa973b28cacb17134f
+problem_statement: |
+  no_proxy entries should match whole domain labels. Currently an entry such
+  as "localhost" also matches "prelocalhost", and an entry with a port only
+  matches when the port happens to line up greedily. A URL should bypass the
+  proxy only when its hostname equals the entry or ends with the entry as a
+  dot-separated suffix.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_utils.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - "tests/test_utils.py::test_should_bypass_proxies_no_proxy_domain_boundary[http://prelocalhost/-False]"
+pass_to_pass:
+  - tests/test_utils.py::test_should_bypass_proxies_no_proxy
+  - tests/test_utils.py::test_should_bypass_proxies_pass_only_hostname
+hidden:
+  test_patch: hidden/test_patch.diff

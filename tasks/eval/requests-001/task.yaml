@@ -1,0 +1,21 @@
+id: requests-001
+repo: .cache/repos/requests
+base_commit: e8d2c015eecda8273612dd4562425e00cd164ba5
+fix_commit: fd628095d7b9ddbf3e987d8a4bf0e6062768916f
+problem_statement: |
+  A request whose path starts with a double slash is currently normalized to a
+  single leading slash before being handed to the underlying HTTP stack. The
+  original path should be preserved. Fix the URL handling while keeping existing
+  request behavior unchanged.
+test_command: PYTHONPATH=src python -m pytest -q
+test_files:
+  - tests/test_adapters.py
+  - tests/test_requests.py
+  - tests/conftest.py
+  - pyproject.toml
+fail_to_pass:
+  - tests/test_adapters.py::test_request_url_handles_leading_path_separators
+pass_to_pass:
+  - tests/test_requests.py::TestRequests::test_HTTP_307_ALLOW_REDIRECT_POST
+hidden:
+  test_patch: hidden/test_patch.diff
